@@ -16,17 +16,24 @@ export const ImageGallery = ({ value }) => {
   const [showModal, setShowModal] = useState(false);
   const [largeImageUrl, setLargeImageUrl] = useState('');
 
+   useEffect(() => {
+    if (!value) {
+      return;
+    }
+    setGallery(prevgallery => []);
+    setPage(prevpage => 1);
+  }, [value]);
 
   useEffect(() => {
     if (!value) {
       return;
     }
-
     const fetchArticles = () => {
+    
       setLoading(true);
       getGallery({ searchText: value, page })
         .then(newgallery => {
-          setGallery(prevgallery=>[...prevgallery, ...newgallery]);
+          setGallery(prevgallery => [...prevgallery, ...newgallery]);
         })
         .catch(error => console.log('error :>> ', error))
         .finally(() => {
@@ -36,17 +43,7 @@ export const ImageGallery = ({ value }) => {
     };
 
     fetchArticles();
-  }, [page,value]);
-
-
-
-  useEffect(() => {
-    if (!value) {
-      return;
-    }
-    setGallery(prevgallery=>[]);
-   
-  }, [value]);
+  }, [page, value]);
 
   const handleLoadMore = () => {
     setPage(prevpage => prevpage + 1);
