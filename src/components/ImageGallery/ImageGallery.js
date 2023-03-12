@@ -1,13 +1,14 @@
 import { MagnifyingGlass } from 'react-loader-spinner';
 import { Modal } from 'components/Modal/Modal';
 import { useState, useEffect } from 'react';
+import { Searchbar } from 'components/Searchbar/Searchbar';
 
 import css from './ImageGallery.module.css';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 
 import { getGallery } from '../../services/getGallery';
 
-export const ImageGallery = ({ value }) => {
+export const ImageGallery = () => {
   const [gallery, setGallery] = useState([]);
   // const [error, setError] = useState('');
   const [page, setPage] = useState(1);
@@ -16,22 +17,23 @@ export const ImageGallery = ({ value }) => {
   const [showModal, setShowModal] = useState(false);
   const [largeImageUrl, setLargeImageUrl] = useState('');
 
-   useEffect(() => {
-    if (!value) {
-      return;
-    }
-    setGallery(prevgallery => []);
-    setPage(prevpage => 1);
-  }, [value]);
+  const [textSearch, setTextSearch] = useState('');
+
+  //  useEffect(() => {
+  //   if (!value) {
+  //     return;
+  //   }
+  //   setGallery(prevgallery => []);
+  //   setPage(prevpage => 1);
+  //    }, [value]);
 
   useEffect(() => {
-    if (!value) {
-      return;
-    }
     const fetchArticles = () => {
-    
+      if (!textSearch) {
+        return;
+      }
       setLoading(true);
-      getGallery({ searchText: value, page })
+      getGallery({ textSearch, page })
         .then(newgallery => {
           setGallery(prevgallery => [...prevgallery, ...newgallery]);
         })
@@ -43,7 +45,7 @@ export const ImageGallery = ({ value }) => {
     };
 
     fetchArticles();
-  }, [page, value]);
+  }, [page, textSearch]);
 
   const handleLoadMore = () => {
     setPage(prevpage => prevpage + 1);
@@ -61,8 +63,16 @@ export const ImageGallery = ({ value }) => {
     setShowModal(!showModal);
   };
 
+  const handleSubmit = textSearch => {
+    setTextSearch(textSearch);
+    setPage(1);
+    setGallery([])
+  }
+
   return (
     <>
+      <Searchbar onSearch={handleSubmit} />
+
       {loading && (
         <MagnifyingGlass
           visible={true}
@@ -84,9 +94,9 @@ export const ImageGallery = ({ value }) => {
         <button className={css.buttonLoad} onClick={handleLoadMore}>
           Load more
         </button>
-      )}
+      )} 
 
-      {showModal && <Modal imgUrl={largeImageUrl} onClose={toggleModal} />}
+      {showModal && <Modal imgUrl={largeImageUrl} onClose={toggleModal} />} 
     </>
   );
 };
