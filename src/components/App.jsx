@@ -1,24 +1,17 @@
-import { Component } from 'react';
-
 import { Searchbar } from './Searchbar/Searchbar';
 
 import { ImageGallery } from './ImageGallery/ImageGallery';
+import { useState } from 'react';
 
-  
-export class App extends Component {
-  state = {
-    textSearch: '',
-    };
+export const App = () => {
+  const [textSearch, setTextSearch] = useState('');
 
-  handleSubmit = textSearch => {
-    this.setState({ textSearch });
-  };
-  render() {
-    return (
-      <div>
-       <Searchbar onSearch={this.handleSubmit} />
-       <ImageGallery value={this.state.textSearch} />
-      </div>
-    );
-  }
-}
+  const handleSubmit = textSearch => setTextSearch(textSearch);
+
+  return (
+    <div>
+      <Searchbar onSearch={handleSubmit} />
+      <ImageGallery value={textSearch} />
+    </div>
+  );
+};

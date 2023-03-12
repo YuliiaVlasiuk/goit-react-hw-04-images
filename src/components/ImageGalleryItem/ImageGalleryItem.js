@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 
+import { nanoid } from 'nanoid';
+
 import css from './ImageGalleryItem.module.css';
 
 export const ImageGalleryItem = ({ gallery, onClickImg }) => {
   return gallery.map(el => {
     return (
-      <li key={el.id} className={css.gallery__item}>
+      <li key={nanoid()} className={css.gallery__item}>
         <img
           onClick={() => {
             console.log(el.largeImageURL);
