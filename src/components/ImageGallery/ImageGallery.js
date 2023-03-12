@@ -9,12 +9,13 @@ import { getGallery } from '../../services/getGallery';
 
 export const ImageGallery = ({ value }) => {
   const [gallery, setGallery] = useState([]);
-  const [error, setError] = useState('');
+  // const [error, setError] = useState('');
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [buttonVisial, setButtonVisial] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [largeImageUrl, setLargeImageUrl] = useState('');
+
 
   useEffect(() => {
     if (!value) {
@@ -25,9 +26,9 @@ export const ImageGallery = ({ value }) => {
       setLoading(true);
       getGallery({ searchText: value, page })
         .then(newgallery => {
-          setGallery([...gallery, ...newgallery]);
+          setGallery(prevgallery=>[...prevgallery, ...newgallery]);
         })
-        .catch(error => setError(error.message))
+        .catch(error => console.log('error :>> ', error))
         .finally(() => {
           setButtonVisial(true);
           setLoading(false);
@@ -35,34 +36,20 @@ export const ImageGallery = ({ value }) => {
     };
 
     fetchArticles();
-  }, [page]);
+  }, [page,value]);
+
 
 
   useEffect(() => {
     if (!value) {
       return;
     }
-
-    const fetchArticles = () => {
-      setLoading(true);
-      getGallery({ searchText: value, page:1 })
-        .then(newgallery => {
-          setGallery(newgallery);
-        })
-        .catch(error => setError(error.message))
-        .finally(() => {
-          setButtonVisial(true);
-          setLoading(false);
-        });
-    };
-
-    fetchArticles();
+    setGallery(prevgallery=>[]);
+   
   }, [value]);
 
   const handleLoadMore = () => {
-    
-    setPage(prevpage=>prevpage + 1);
-   
+    setPage(prevpage => prevpage + 1);
   };
 
   const getLargeImgUrl = imgUrl => {
